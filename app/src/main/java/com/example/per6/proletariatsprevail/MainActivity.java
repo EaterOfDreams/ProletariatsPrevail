@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
 
     static {System.loadLibrary("opencv_java3");}
 
-    CascadeClassifier face_cascade;
+    CascadeClassifier face_cascade, eye_cascade;
 
     CameraBridgeViewBase imga;
     Mat image, gray;
@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
             @Override
             public void onClick(View view) {
                 imga.enableView();
+                imga.setVisibility(View.VISIBLE);
                 back.setVisibility(View.INVISIBLE);
                 save.setVisibility(View.INVISIBLE);
                 imageView.setVisibility(View.INVISIBLE);
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
             @Override
             public void onClick(View view) {
                 imga.disableView();
+                imga.setVisibility(View.GONE);
                 back.setVisibility(View.VISIBLE);
                 save.setVisibility(View.VISIBLE);
                 imageView.setVisibility(View.VISIBLE);
@@ -76,12 +78,17 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
 
 
         face_cascade = new CascadeClassifier();
+        eye_cascade = new CascadeClassifier();
+
         // load cascade file from application resources
 
-        if( !face_cascade.load( classifierPath("haarcascade_frontalface_alt.xml", R.raw.haarcascade_frontalface_alt ))) {
+        if( !face_cascade.load( classifierPath("haarcascade_frontalface_alt.xml", R.raw.haarcascade_frontalface_alt))) {
             Log.wtf(TAG, "onCreate: LOAD HAARSCASCADE FAILED!");
         }
 
+        if( !eye_cascade.load( classifierPath("haarcascade_eye_tree_eyeglasses.xml", R.raw.haarcascade_eye_tree_eyeglasses))) {
+            Log.wtf(TAG, "onCreate: LOAD HAARSCASCADE FAILED!");
+        }
 
     }
 
