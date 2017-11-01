@@ -12,10 +12,11 @@ import android.widget.ImageView;
 
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.Utils;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
 import org.opencv.core.Rect;
-import org.opencv.core.Scalar;
+import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 
@@ -98,12 +99,20 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         Imgproc.equalizeHist(frame_gray, frame_gray);
         MatOfRect rect = new MatOfRect();
         face_cascade.detectMultiScale(frame_gray, rect);
-
-        Mat color = gray;
+        Mat marx = Imgcodecs.imread(classifierPath("marx.png",R.raw.marx), Imgcodecs.IMREAD_UNCHANGED);
+        Mat color = image;
         Rect[] facesArray = rect.toArray();
-        for (int i = 0; i < facesArray.length; i++)
-            Imgproc.rectangle(color, facesArray[i].tl(), facesArray[i].br(), new Scalar(255, 0, 0, 255), 3);
-        Bitmap bm = Bitmap.createBitmap(color.cols(), color.rows(),Bitmap.Config.ARGB_8888);
+        for (int i = 0; i < facesArray.length; i++) {
+//            Imgproc.rectangle(color, facesArray[i].tl(), facesArray[i].br(), new Scalar(255, 0, 0, 255), 3);
+            //marx.copyTo(color);
+            Mat resizedCommie = new Mat();
+            Imgproc.resize(marx,resizedCommie,facesArray[i].size());
+            Log.d(TAG, "drawImage: "+ resizedCommie.channels() + " " + color.submat(facesArray[i]).channels() + " " + image.channels() + " " + frame_gray.channels());
+            Core.addWeighted(resizedCommie,0.5, color.submat(facesArray[i]), 0.5, 0, color.submat(facesArray[i]));
+
+        }
+        //.rowRange((int)facesArray[i].tl().y, (int)facesArray[i].br().y).colRange((int)facesArray[i].tl().x, (int)facesArray[i].br().x)
+        Bitmap bm = Bitmap.createBitmap(color.cols(), color.rows(),Bitmap.Config.ALPHA_8);
         Utils.matToBitmap(color, bm);
 
         // find the imageview and draw it!
@@ -111,6 +120,29 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     }
 
     public String classifierPath(String name, int id){
+        InputStream is = getResources().openRawResource(id);
+        File cascadeDir = getDir("cascade", Context.MODE_PRIVATE);
+        File cascadeFile = new File(cascadeDir,name);
+        FileOutputStream os = null;
+        try {
+            os = new FileOutputStream(cascadeFile);
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = is.read(buffer)) != -1) {
+                os.write(buffer, 0, bytesRead);
+            }
+            is.close();
+            os.close();
+            return cascadeFile.getAbsolutePath();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public String imagePath(String name, int id){
         InputStream is = getResources().openRawResource(id);
         File cascadeDir = getDir("cascade", Context.MODE_PRIVATE);
         File cascadeFile = new File(cascadeDir,name);
