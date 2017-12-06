@@ -1,7 +1,6 @@
 package com.example.per6.proletariatsprevail;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -11,13 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.Utils;
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfRect;
-import org.opencv.core.Rect;
-import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 
 import java.io.File;
@@ -73,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
                 back.setVisibility(View.VISIBLE);
                 save.setVisibility(View.VISIBLE);
                 imageView.setVisibility(View.VISIBLE);
-                drawImage();
+//                drawImage();
             }
         });
 
@@ -93,31 +86,31 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
 
     }
 
-    private void drawImage() {
-        Mat frame_gray;
-        frame_gray = gray;
-        Imgproc.equalizeHist(frame_gray, frame_gray);
-        MatOfRect rect = new MatOfRect();
-        face_cascade.detectMultiScale(frame_gray, rect);
-        Mat marx = Imgcodecs.imread(classifierPath("marx.png",R.raw.marx), Imgcodecs.IMREAD_UNCHANGED);
-        Mat color = image;
-        Rect[] facesArray = rect.toArray();
-        for (int i = 0; i < facesArray.length; i++) {
-//            Imgproc.rectangle(color, facesArray[i].tl(), facesArray[i].br(), new Scalar(255, 0, 0, 255), 3);
-            //marx.copyTo(color);
-            Mat resizedCommie = new Mat();
-            Imgproc.resize(marx,resizedCommie,facesArray[i].size());
-            Log.d(TAG, "drawImage: "+ resizedCommie.channels() + " " + color.submat(facesArray[i]).channels() + " " + image.channels() + " " + frame_gray.channels());
-            Core.addWeighted(resizedCommie,0.5, color.submat(facesArray[i]), 0.5, 0, color.submat(facesArray[i]));
-
-        }
-        //.rowRange((int)facesArray[i].tl().y, (int)facesArray[i].br().y).colRange((int)facesArray[i].tl().x, (int)facesArray[i].br().x)
-        Bitmap bm = Bitmap.createBitmap(color.cols(), color.rows(),Bitmap.Config.ALPHA_8);
-        Utils.matToBitmap(color, bm);
-
-        // find the imageview and draw it!
-        imageView.setImageBitmap(bm);
-    }
+//    private void drawImage() {
+//        Mat frame_gray;
+//        frame_gray = gray;
+//        Imgproc.equalizeHist(frame_gray, frame_gray);
+//        MatOfRect rect = new MatOfRect();
+//        face_cascade.detectMultiScale(frame_gray, rect);
+//        Mat marx = Imgcodecs.imread(classifierPath("marx.png",R.raw.marx), Imgcodecs.IMREAD_UNCHANGED);
+//        Mat color = image;
+//        Rect[] facesArray = rect.toArray();
+//        for (int i = 0; i < facesArray.length; i++) {
+////            Imgproc.rectangle(color, facesArray[i].tl(), facesArray[i].br(), new Scalar(255, 0, 0, 255), 3);
+//            //marx.copyTo(color);
+//            Mat resizedCommie = new Mat();
+//            Imgproc.resize(marx,resizedCommie,facesArray[i].size());
+//            Log.d(TAG, "drawImage: "+ resizedCommie.channels() + " " + color.submat(facesArray[i]).channels() + " " + image.channels() + " " + frame_gray.channels());
+//            Core.addWeighted(resizedCommie,0.5, color.submat(facesArray[i]), 0.5, 0, color.submat(facesArray[i]));
+//
+//        }
+//        //.rowRange((int)facesArray[i].tl().y, (int)facesArray[i].br().y).colRange((int)facesArray[i].tl().x, (int)facesArray[i].br().x)
+//        Bitmap bm = Bitmap.createBitmap(color.cols(), color.rows(),Bitmap.Config.ALPHA_8);
+//        Utils.matToBitmap(color, bm);
+//
+//        // find the imageview and draw it!
+//        imageView.setImageBitmap(bm);
+//    }
 
     public String classifierPath(String name, int id){
         InputStream is = getResources().openRawResource(id);
