@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ProletariatsPrevail</string>
+    <string name="title_activity_camera_view">CameraView</string>
+    <string name="title_activity_main2">Main2Activity</string>
 </resources>
