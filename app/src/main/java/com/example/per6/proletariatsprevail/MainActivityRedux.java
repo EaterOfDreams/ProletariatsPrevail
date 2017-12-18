@@ -119,7 +119,7 @@ public class MainActivityRedux extends AppCompatActivity implements SurfaceHolde
 
     private void drawImage() {
 
-        Mat imageRaw = Imgcodecs.imread(String.format(getFilesDir().getPath(), curTime));
+        Mat imageRaw = Imgcodecs.imread(filepath);
         Log.d(TAG, "drawImage: "+imageRaw.toString()+" "+);
         Mat frame_gray = imageRaw.clone();
         Imgproc.cvtColor(imageRaw,frame_gray,Imgproc.COLOR_RGB2GRAY);
